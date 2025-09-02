@@ -1,0 +1,415 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Professional Resume Builder Design System */
+
+@layer base {
+  :root {
+    --background: 244 12% 96%;
+    --foreground: 220 10% 15%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 220 10% 15%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 10% 15%;
+
+    --primary: 213 94% 50%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 210 14% 89%;
+    --secondary-foreground: 220 10% 25%;
+
+    --muted: 210 14% 93%;
+    --muted-foreground: 220 8% 45%;
+
+    --accent: 213 94% 50%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 214 20% 88%;
+    --input: 214 20% 88%;
+    --ring: 213 94% 50%;
+
+    --radius: 0.5rem;
+
+    /* Resume specific tokens */
+    --resume-background: 0 0% 100%;
+    --resume-shadow: 220 43% 11% / 0.1;
+    --section-border: 213 94% 50%;
+    --edit-focus: 213 94% 50% / 0.1;
+    --hover-bg: 213 94% 50% / 0.05;
+
+    /* Templates */
+    --template-modern-accent: 213 94% 50%;
+    --template-classic-accent: 220 10% 15%;
+    --template-minimal-accent: 220 8% 60%;
+
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-spring: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans;
+  }
+}
+
+@layer components {
+  /* Resume Container - A4 Single Page */
+  .resume-container {
+    @apply mx-auto bg-card shadow-lg relative;
+    background: hsl(var(--resume-background));
+    box-shadow: 0 10px 40px hsl(var(--resume-shadow));
+    width: 794px; /* A4 width */
+    min-height: 1123px; /* Initial page height */
+    /* Allow growth beyond one page while editing */
+    max-height: none;
+    overflow: visible;
+    padding-bottom: 4rem; /* breathing room for last section */
+  }
+
+  /* Constrain only in preview mode for on-screen single-page look */
+  .preview-mode .resume-container {
+    max-height: 1123px;
+    overflow: hidden;
+  }
+
+  /* Editable Content */
+  .editable-content {
+    @apply outline-none transition-all duration-300;
+  }
+
+  /* Ghost (placeholder) text for editable fields when empty */
+  .editable-content[data-placeholder]:empty:before {
+    content: attr(data-placeholder);
+    color: hsl(var(--muted-foreground));
+    opacity: 0.55;
+    font-style: italic;
+    pointer-events: none;
+    display: inline-block;
+    white-space: pre-wrap;
+  }
+  
+  /* Fallback when element isn't technically empty (e.g., lingering zero-width nodes) */
+  .editable-content[data-placeholder][data-empty="true"]:before {
+    content: attr(data-placeholder);
+    color: hsl(var(--muted-foreground));
+    opacity: 0.55;
+    font-style: italic;
+    pointer-events: none;
+    display: inline-block;
+    white-space: pre-wrap;
+  }
+
+  /* Keep ghost text visible while focusing an empty field */
+  .editable-content[data-placeholder]:focus:empty:before {
+    opacity: 0.4;
+  }
+
+  .editable-content:focus {
+    @apply rounded-sm;
+    background: hsl(var(--edit-focus));
+    outline: 2px dashed hsl(var(--primary));
+  }
+
+  .editable-content:hover {
+    background: hsl(var(--hover-bg));
+  }
+
+  /* Section Styles */
+  .resume-section {
+    @apply relative border-b transition-all duration-300;
+    border-color: hsl(var(--border));
+    transition: var(--transition-smooth);
+    padding: 12px 0;
+    margin-bottom: 8px;
+  }
+
+  .resume-section.hidden {
+    @apply opacity-50;
+  }
+
+  /* Remove bottom divider specifically for the header (personal information) section */
+  .header-no-divider {
+    border-bottom: none !important;
+    margin-bottom: 4px; /* tighten spacing slightly */
+    padding-bottom: 4px; /* reduce extra gap where divider was */
+  }
+
+  .section-title {
+    @apply text-xl font-semibold border-b-2 pb-1 mb-3;
+    border-color: hsl(var(--section-border));
+    color: hsl(var(--section-border));
+  }
+
+  /* Template Styles */
+  .template-modern .section-title {
+    color: hsl(var(--template-modern-accent));
+    border-color: hsl(var(--template-modern-accent));
+  }
+
+  .template-classic .section-title {
+    @apply font-serif;
+    color: hsl(var(--template-classic-accent));
+    border-color: hsl(var(--template-classic-accent));
+  }
+
+  .template-minimal .section-title {
+    @apply text-lg border-b;
+    color: hsl(var(--template-minimal-accent));
+    border-color: hsl(var(--template-minimal-accent));
+  }
+
+  /* Skills Grid */
+  .skills-grid {
+    @apply grid grid-cols-3 gap-2;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 860px) {
+    .resume-container {
+      width: 100%;
+      max-width: 100%;
+      min-height: auto;
+      padding: 1.5rem 1rem 6rem; /* extra bottom space for mobile add sheet */
+      box-shadow: none;
+      border: 1px solid hsl(var(--border));
+    }
+    .section-title {
+      font-size: 1rem;
+    }
+    .skills-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+    .toolbar { @apply px-2; }
+  }
+
+  @media (max-width: 520px) {
+    .resume-container {
+      padding: 1rem 0.75rem 7rem;
+    }
+    .skills-grid { grid-template-columns: repeat(1, minmax(0,1fr)); }
+    h1 { font-size: 1.5rem; }
+    .section-title { font-size: 0.95rem; }
+    .resume-section { padding: 8px 0; }
+  }
+
+  /* Control Buttons */
+  .section-controls {
+    @apply absolute top-2 right-2 flex gap-1 opacity-0 transition-opacity duration-200;
+  }
+
+  .resume-section:hover .section-controls {
+    @apply opacity-100;
+  }
+
+  .control-button {
+    @apply w-8 h-8 flex items-center justify-center rounded text-xs hover:bg-secondary transition-colors duration-200;
+  }
+
+  /* Print Styles - A4 Single Page with Auto-scaling */
+  @media print {
+    @page {
+      size: A4 portrait;
+      margin: 0.4in;
+    }
+    
+    * {
+  -webkit-print-color-adjust: exact !important;
+  print-color-adjust: exact !important;
+    }
+    
+    body {
+      @apply bg-white;
+      margin: 0;
+      padding: 0;
+      font-size: 10px !important;
+      line-height: 1.15 !important;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+    }
+    
+    .min-h-screen {
+      min-height: auto !important;
+      padding: 0 !important;
+    }
+    
+    .section-controls,
+    .toolbar,
+    .add-button {
+      @apply hidden !important;
+    }
+    
+    .resume-container {
+      @apply shadow-none;
+      width: 100% !important;
+      max-width: none !important;
+      min-height: auto !important;
+      max-height: 10.5in !important; /* A4 height minus margins */
+      margin: 0 !important;
+      padding: 8px !important;
+      page-break-after: avoid;
+      page-break-inside: avoid;
+      break-inside: avoid;
+      overflow: hidden !important;
+      transform-origin: top left;
+      
+      /* Auto-scale content if it exceeds page height */
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+    
+    .resume-section {
+      page-break-inside: avoid;
+      break-inside: avoid;
+      margin-bottom: 4px !important;
+      padding: 4px 0 !important;
+      border-bottom-width: 1px !important;
+    }
+    
+    .resume-section:last-child {
+      border-bottom: none !important;
+      margin-bottom: 0 !important;
+    }
+    
+    .section-title {
+      font-size: 12px !important;
+      font-weight: 600 !important;
+      margin-bottom: 3px !important;
+      padding-bottom: 1px !important;
+      line-height: 1.1 !important;
+    }
+    
+    /* Compact typography for single page */
+    h1 { 
+      font-size: 16px !important; 
+      margin: 0 0 2px 0 !important; 
+      line-height: 1.1 !important;
+      font-weight: 700 !important;
+    }
+    h2 { 
+      font-size: 13px !important; 
+      margin: 0 0 2px 0 !important; 
+      line-height: 1.1 !important;
+      font-weight: 600 !important;
+    }
+    h3 { 
+      font-size: 11px !important; 
+      margin: 0 0 1px 0 !important; 
+      line-height: 1.1 !important;
+      font-weight: 600 !important;
+    }
+    p { 
+      margin: 0 0 2px 0 !important; 
+      font-size: 9px !important; 
+      line-height: 1.15 !important;
+    }
+    
+    /* Compact content spacing */
+    .editable-content {
+      margin-bottom: 2px !important;
+      padding: 0 !important;
+    }
+    
+    .skills-grid {
+      grid-template-columns: repeat(4, 1fr) !important;
+      gap: 2px !important;
+      font-size: 8px !important;
+    }
+    
+    /* Extra compact mode for overflow content */
+    .resume-container:has(.resume-section:nth-child(n+8)) {
+      font-size: 8px !important;
+    }
+    
+    .resume-container:has(.resume-section:nth-child(n+8)) .section-title {
+      font-size: 10px !important;
+      margin-bottom: 2px !important;
+    }
+    
+    .resume-container:has(.resume-section:nth-child(n+8)) h1 {
+      font-size: 14px !important;
+    }
+    
+    .resume-container:has(.resume-section:nth-child(n+8)) p {
+      font-size: 8px !important;
+      line-height: 1.1 !important;
+      margin-bottom: 1px !important;
+    }
+    
+    /* Force single page - hide overflow if too much content */
+    html, body {
+      height: auto !important;
+      overflow: visible !important;
+    }
+    
+    /* Ensure no page breaks */
+    .resume-container * {
+      page-break-before: avoid !important;
+      page-break-after: avoid !important;
+      page-break-inside: avoid !important;
+    }
+  }
+}

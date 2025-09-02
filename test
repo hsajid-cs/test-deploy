@@ -1,0 +1,78 @@
+
+  // const handlePrint = async () => {
+  //   // Ensure printing uses preview (clean) layout; temporarily enable preview if not active
+  //   const wasPreview = previewMode;
+  //   if (!wasPreview) {
+  //     setPreviewMode(true);
+  //     // wait for at least two animation frames so React has painted preview-mode class
+  //     await new Promise<void>(res => requestAnimationFrame(() => requestAnimationFrame(() => res())));
+  //   }
+
+  //   // Call print now that preview layout is applied
+  //   window.print();
+
+  //   // Restore edit mode after a short delay if we changed it
+  //   if (!wasPreview) {
+  //     setTimeout(() => setPreviewMode(false), 150);
+  //   }
+  // };
+
+  // const handlePrint = async () => {
+  //   const resumeEl = document.querySelector('.resume-container') as HTMLElement | null;
+  //   if (!resumeEl) return;
+
+  //   // collect styles so Tailwind / app styles are present in print window
+  //   const styles = Array.from(document.querySelectorAll('link[rel="stylesheet"], style'))
+  //     .map((n) => n.outerHTML)
+  //     .join('\n');
+
+  //   const printWindow = window.open('', '_blank', 'width=900,height=1100');
+  //   if (!printWindow) return;
+
+  //   // Extra print CSS: remove page margins/frame and remove container background/shadow/border
+  //   const extraPrintCss = `
+  //     @page { margin: 0; }
+  //     html, body { height: 100%; margin: 0; -webkit-print-color-adjust: exact; }
+  //     /* Ensure the resume fills the print page and has no border/white frame */
+  //     .resume-container { 
+  //       box-shadow: none !important; 
+  //       border: none !important; 
+  //       background: transparent !important; 
+  //       border-radius: 0 !important; 
+  //       padding: 0 !important; 
+  //       margin: 0 !important; 
+  //       width: 100% !important; 
+  //       max-width: none !important;
+  //     }
+  //     /* hide app chrome if accidentally included */
+  //     .toolbar, .no-print, button, [data-hide-print] { display: none !important; }
+  //   `;
+
+  //   printWindow.document.open();
+  //   printWindow.document.write(`
+  //     <!doctype html>
+  //     <html>
+  //       <head>
+  //         <meta charset="utf-8" />
+  //         <meta name="viewport" content="width=device-width,initial-scale=1" />
+  //         ${styles}
+  //         <style>${extraPrintCss}</style>
+  //       </head>
+  //       <body>
+  //         ${(resumeEl as HTMLElement).outerHTML}
+  //       </body>
+  //     </html>
+  //   `);
+  //   printWindow.document.close();
+
+  //   // wait for styles to load / paint before printing
+  //   await new Promise((res) => {
+  //     // give the browser a short moment to apply styles
+  //     setTimeout(res, 250);
+  //   });
+
+  //   printWindow.focus();
+  //   printWindow.print();
+  //   // leave window open for user to save; optionally close after print:
+  //   // printWindow.close();
+  //  };
